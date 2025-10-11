@@ -121,3 +121,11 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+int
+sys_getfavnum(void)
+{
+  int favnum = 7;
+
+  return favnum;
+}

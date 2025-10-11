@@ -22,3 +22,4 @@
 #define SYS_close  21
 #define SYS_getpinfo 24
 #define SYS_settickets 27
+#define SYS_getfavnum 28
