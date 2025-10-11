@@ -163,6 +163,7 @@ out/mkfs: tools/mkfs.c include/fs.h
 .PRECIOUS: uobj/%.o
 
 USER_PROGS=\
+	killrandom\
 	getcount\
 	shutdown\
 	getfavnumtest\

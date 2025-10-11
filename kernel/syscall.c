@@ -147,7 +147,8 @@ extern int sys_getpinfo(void);
 extern int sys_settickets(void);
 extern int sys_getfavnum(void);
 extern void sys_halt(void);
-extern int sys_getcount(int);
+extern int sys_getcount(void);
+extern int sys_killrandom(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -175,7 +176,8 @@ static int (*syscalls[])(void) = {
 [SYS_settickets]    sys_settickets,
 [SYS_getfavnum]    sys_getfavnum,
 [SYS_halt]    sys_halt,
-[SYS_getcount]    sys_getcount
+[SYS_getcount]    sys_getcount,
+[SYS_killrandom]    sys_killrandom
 };
 
 void
