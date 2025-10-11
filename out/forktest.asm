@@ -58,7 +58,7 @@ forktest(void)
   int n, pid;
 
   printf(1, "fork test\n");
-  93:	48 c7 c6 60 05 00 00 	mov    $0x560,%rsi
+  93:	48 c7 c6 68 05 00 00 	mov    $0x568,%rsi
   9a:	bf 01 00 00 00       	mov    $0x1,%edi
   9f:	b8 00 00 00 00       	mov    $0x0,%eax
   a4:	e8 57 ff ff ff       	call   0 <printf>
@@ -92,7 +92,7 @@ forktest(void)
   e2:	75 48                	jne    12c <forktest+0xa5>
     printf(1, "fork claimed to work N times!\n", N);
   e4:	ba e8 03 00 00       	mov    $0x3e8,%edx
-  e9:	48 c7 c6 70 05 00 00 	mov    $0x570,%rsi
+  e9:	48 c7 c6 78 05 00 00 	mov    $0x578,%rsi
   f0:	bf 01 00 00 00       	mov    $0x1,%edi
   f5:	b8 00 00 00 00       	mov    $0x0,%eax
   fa:	e8 01 ff ff ff       	call   0 <printf>
@@ -106,7 +106,7 @@ forktest(void)
  109:	85 c0                	test   %eax,%eax
  10b:	79 1b                	jns    128 <forktest+0xa1>
       printf(1, "wait stopped early\n");
- 10d:	48 c7 c6 8f 05 00 00 	mov    $0x58f,%rsi
+ 10d:	48 c7 c6 97 05 00 00 	mov    $0x597,%rsi
  114:	bf 01 00 00 00       	mov    $0x1,%edi
  119:	b8 00 00 00 00       	mov    $0x0,%eax
  11e:	e8 dd fe ff ff       	call   0 <printf>
@@ -124,7 +124,7 @@ forktest(void)
  137:	83 f8 ff             	cmp    $0xffffffff,%eax
  13a:	74 1b                	je     157 <forktest+0xd0>
     printf(1, "wait got too many\n");
- 13c:	48 c7 c6 a3 05 00 00 	mov    $0x5a3,%rsi
+ 13c:	48 c7 c6 ab 05 00 00 	mov    $0x5ab,%rsi
  143:	bf 01 00 00 00       	mov    $0x1,%edi
  148:	b8 00 00 00 00       	mov    $0x0,%eax
  14d:	e8 ae fe ff ff       	call   0 <printf>
@@ -133,7 +133,7 @@ forktest(void)
   }
   
   printf(1, "fork test OK\n");
- 157:	48 c7 c6 b6 05 00 00 	mov    $0x5b6,%rsi
+ 157:	48 c7 c6 be 05 00 00 	mov    $0x5be,%rsi
  15e:	bf 01 00 00 00       	mov    $0x1,%edi
  163:	b8 00 00 00 00       	mov    $0x0,%eax
  168:	e8 93 fe ff ff       	call   0 <printf>
@@ -708,3 +708,9 @@ SYSCALL(halt)
  551:	b8 1d 00 00 00       	mov    $0x1d,%eax
  556:	cd 40                	int    $0x40
  558:	c3                   	ret
+
+0000000000000559 <getcount>:
+SYSCALL(getcount)
+ 559:	b8 1e 00 00 00       	mov    $0x1e,%eax
+ 55e:	cd 40                	int    $0x40
+ 560:	c3                   	ret

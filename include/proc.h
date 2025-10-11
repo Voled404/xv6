@@ -97,6 +97,7 @@ struct proc {
   int inuse;// If it's being run by a CPU or not
   int ticks;// How many ticks has accumulated
   int tickets;                 // Number of tickets this process has (for lottery scheduling)
+  int (*syscallcount[30])(void); // System call count
 };
 
 // Process memory is laid out contiguously, low addresses first:

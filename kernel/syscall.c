@@ -147,6 +147,7 @@ extern int sys_getpinfo(void);
 extern int sys_settickets(void);
 extern int sys_getfavnum(void);
 extern void sys_halt(void);
+extern int sys_getcount(int);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -173,7 +174,8 @@ static int (*syscalls[])(void) = {
 [SYS_getpinfo]    sys_getpinfo,
 [SYS_settickets]    sys_settickets,
 [SYS_getfavnum]    sys_getfavnum,
-[SYS_halt]    sys_halt
+[SYS_halt]    sys_halt,
+[SYS_getcount]    sys_getcount
 };
 
 void
@@ -184,6 +186,7 @@ syscall(void)
   num = proc->tf->eax;
   if(num > 0 && num < NELEM(syscalls) && syscalls[num]) {
     proc->tf->eax = syscalls[num]();
+    proc->syscallcount[num] = proc->syscallcount[num] + 1;
   } else {
     cprintf("%d %s: unknown sys call %d\n",
             proc->pid, proc->name, num);

@@ -135,3 +135,13 @@ sys_halt(void)
 {
   outw(0x604, 0x2000);
 }
+
+int
+sys_getcount(void)
+{
+  int n;
+  if(argint(0, &n) < 0)
+    return -1;
+
+  return proc->syscallcount[n];
+}

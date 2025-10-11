@@ -25,6 +25,7 @@ int sleep(int);
 int uptime(void);
 int getpinfo(struct pstat*);
 int getfavnum(void);
+int getcount(int);
 
 // ulib.c
 int stat(char*, struct stat*);
