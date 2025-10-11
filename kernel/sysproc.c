@@ -129,3 +129,9 @@ sys_getfavnum(void)
 
   return favnum;
 }
+
+void
+sys_halt(void)
+{
+  outw(0x604, 0x2000);
+}
