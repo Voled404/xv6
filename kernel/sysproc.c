@@ -5,21 +5,9 @@
 #include "memlayout.h"
 #include "mmu.h"
 #include "proc.h"
+#include "random.h"
 
 extern struct ptable ptable;
-
-static unsigned long int next = 1;  // NB: "unsigned long int" is assumed to be 32 bits wide
-
-int rand(void)  // RAND_MAX assumed to be 32767
-{
-    next = next * 1103515245 + 12345;
-    return (unsigned int) (next / 65536) % 32768;
-}
-
-void srand(unsigned int seed)
-{
-    next = seed;
-}
 
 int
 sys_fork(void)
@@ -171,9 +159,37 @@ sys_killrandom(void)
       x++;
     }
   }
-  int idx = (rand() * x) / 32768;
+  srand(sys_uptime());
+  int idx = rand_between(0, x);
   struct proc *process = processes[idx];
   int pid = process->pid;
   kill(pid);
   return pid;
+}
+
+int sys_gettickets(void)
+{
+    return proc->tickets;
+}
+
+int sys_settickets(void)
+{
+  int n;
+  if(argint(0, &n) < 0)
+    return -1;
+
+  acquire(&ptable.lock);
+  proc->tickets = n;
+  release(&ptable.lock);
+
+  return n;
+}
+
+int sys_random(void)
+{
+  int min, max;
+  if(argint(0, &min) < 0 || argint(1, &max) < 0)
+    return -1;
+
+  return rand_between(min, max);
 }

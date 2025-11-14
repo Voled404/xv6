@@ -49,9 +49,16 @@ void kill_children() {
 }
 
 void print_info() {
-    int index[N] = {-1};
-    int ticks[N] = {-1};
+    int index[N], ticks[N];
+    index[0] = -1;
+    ticks[0] = -1;
+    for (int i = 1; i < N; i++) {
+        index[i] = 0;
+        ticks[i] = 0;
+    }
+
     int tticks = 0;
+    int total_tickets = 0;
 
     for (int i = 0; i < N; i++) {
         index[i] = pindex(&pstat, children[i]);
@@ -63,16 +70,19 @@ void print_info() {
 
         ticks[i] = pstat.ticks[index[i]];
         tticks += ticks[i];
+        total_tickets += tickets[i];
     }
 
     printf(1, "(real %d)\n\n", tticks);
 
     for (int i = 0; i < N; i++) {
-        int cpu1 = ticks[i] / (tticks / 100);
-        int cpu2 = ticks[i] / (tticks / 1000) % 10;
+        int cpu1 = ticks[i] * 100 / tticks;
+        int cpu2 = ticks[i] * 1000 / tticks % 10;
+        int expected1 = tickets[i] * 100 / total_tickets;
+        int expected2 = tickets[i] * 1000 / total_tickets % 10;
 
-        printf(1, "PID: %d\tTICKETS: %d\tTICKS: %d\tCPU: %d.%d%%\n",
-               children[i], tickets[i], ticks[i], cpu1, cpu2);
+        printf(1, "PID: %d\tTICKETS: %d\tTICKS: %d\tCPU: %d.%d%%\tEXPECTED: %d.%d%%\n",
+               children[i], tickets[i], ticks[i], cpu1, cpu2, expected1, expected2);
     }
     printf(1, "\n");
 }

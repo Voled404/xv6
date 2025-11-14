@@ -26,3 +26,5 @@
 #define SYS_halt 29
 #define SYS_getcount 30
 #define SYS_killrandom 31
+#define SYS_gettickets 32
+#define SYS_random 33

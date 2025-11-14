@@ -6,6 +6,7 @@
 #include "x86.h"
 #include "proc.h"
 #include "spinlock.h"
+#include "random.h"
 
 struct ptable ptable;
 
@@ -99,6 +100,7 @@ userinit(void)
   safestrcpy(p->name, "initcode", sizeof(p->name));
   p->cwd = namei("/");
 
+  p->tickets = 1;
   p->state = RUNNABLE;
 }
 
@@ -143,6 +145,7 @@ fork(void)
     return -1;
   }
   np->sz = proc->sz;
+  np->tickets = proc->tickets;
   np->parent = proc;
   *np->tf = *proc->tf;
 
@@ -260,37 +263,66 @@ void
 scheduler(void)
 {
   struct proc *p = 0;
+  struct proc *chosen = 0;
 
   for(;;){
     // Enable interrupts on this processor.
     sti();
 
-    // no runnable processes? (did we hit the end of the table last time?)
-    // if so, wait for irq before trying again.
-    if (p == &ptable.proc[NPROC])
-      hlt();
-
     // Loop over process table looking for process to run.
     acquire(&ptable.lock);
+
+    int total_tickets = 0;
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-      if(p->state != RUNNABLE)
+      if(p->state != RUNNABLE || p->tickets <= 0)
+        continue;
+      total_tickets += p->tickets;
+    }
+
+    // no runnable processes? (did we hit the end of the table last time?)
+    // if so, wait for irq before trying again.
+    if(total_tickets == 0){
+      release(&ptable.lock);
+      hlt();
+      continue;
+    }
+
+    // lottery
+    int winning_ticket = rand_between(1, total_tickets);
+    int counter = 0;
+
+    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+      if(p->state != RUNNABLE || p->tickets <= 0)
         continue;
 
-      // Switch to chosen process.  It is the process's job
-      // to release ptable.lock and then reacquire it
-      // before jumping back to us.
-      proc = p;
-      switchuvm(p);
-      p->state = RUNNING;
-      p->inuse = 1;
-
-      swtch(&cpu->scheduler, proc->context);
-    
-      switchkvm();
-      // Process is done running for now.
-      // It should have changed its p->state before coming back.
-      proc = 0;
+      counter += p->tickets;
+      if(counter >= winning_ticket){
+        chosen = p;
+        break;
+      }
     }
+    
+    if(chosen == 0){
+      release(&ptable.lock);
+      panic("lottery: no winner");
+    }
+
+    //if(p->tickets <= random_ticket) continue;
+    // Switch to chosen process.  It is the process's job
+    // to release ptable.lock and then reacquire it
+    // before jumping back to us.
+    proc = chosen;
+    switchuvm(chosen);
+    chosen->state = RUNNING;
+    chosen->inuse = 1;
+
+    swtch(&cpu->scheduler, proc->context);
+    
+    switchkvm();
+    // Process is done running for now.
+    // It should have changed its p->state before coming back.
+    proc = 0;
+
     release(&ptable.lock);
 
   }

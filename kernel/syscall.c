@@ -149,6 +149,8 @@ extern int sys_getfavnum(void);
 extern void sys_halt(void);
 extern int sys_getcount(void);
 extern int sys_killrandom(void);
+extern int sys_gettickets(void);
+extern int sys_random(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -177,7 +179,9 @@ static int (*syscalls[])(void) = {
 [SYS_getfavnum]    sys_getfavnum,
 [SYS_halt]    sys_halt,
 [SYS_getcount]    sys_getcount,
-[SYS_killrandom]    sys_killrandom
+[SYS_killrandom]    sys_killrandom,
+[SYS_gettickets]    sys_gettickets,
+[SYS_random]    sys_random
 };
 
 void
@@ -194,8 +198,4 @@ syscall(void)
             proc->pid, proc->name, num);
     proc->tf->eax = -1;
   }
-}
-
-int sys_settickets(void) {
-    return -1;
 }
