@@ -150,6 +150,7 @@ extern void sys_halt(void);
 extern int sys_getcount(void);
 extern int sys_killrandom(void);
 extern int sys_gettickets(void);
+extern int sys_random(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -179,7 +180,8 @@ static int (*syscalls[])(void) = {
 [SYS_halt]    sys_halt,
 [SYS_getcount]    sys_getcount,
 [SYS_killrandom]    sys_killrandom,
-[SYS_gettickets]    sys_gettickets
+[SYS_gettickets]    sys_gettickets,
+[SYS_random]    sys_random
 };
 
 void

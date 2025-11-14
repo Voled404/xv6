@@ -34,6 +34,7 @@ OBJS := \
 	kobj/picirq.o\
 	kobj/pipe.o\
 	kobj/proc.o\
+	kobj/random.o\
 	kobj/spinlock.o\
 	kobj/string.o\
 	kobj/swtch$(BITS).o\

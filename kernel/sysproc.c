@@ -184,3 +184,13 @@ int sys_settickets(void)
 
   return n;
 }
+
+int sys_random(void)
+{
+  int min, max;
+  if(argint(0, &min) < 0 || argint(1, &max) < 0)
+    return -1;
+
+  srand(sys_uptime());
+  return rand_between(min, max);
+}
