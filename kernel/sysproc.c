@@ -191,6 +191,5 @@ int sys_random(void)
   if(argint(0, &min) < 0 || argint(1, &max) < 0)
     return -1;
 
-  srand(sys_uptime());
   return rand_between(min, max);
 }

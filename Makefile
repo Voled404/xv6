@@ -182,6 +182,7 @@ USER_PROGS=\
 	rm\
 	sh\
 	stressfs\
+	stressrand\
 	usertests\
 	wc\
 	zombie\

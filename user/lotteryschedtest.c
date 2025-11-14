@@ -58,6 +58,7 @@ void print_info() {
     }
 
     int tticks = 0;
+    int total_tickets = 0;
 
     for (int i = 0; i < N; i++) {
         index[i] = pindex(&pstat, children[i]);
@@ -69,6 +70,7 @@ void print_info() {
 
         ticks[i] = pstat.ticks[index[i]];
         tticks += ticks[i];
+        total_tickets += tickets[i];
     }
 
     printf(1, "(real %d)\n\n", tticks);
@@ -76,9 +78,11 @@ void print_info() {
     for (int i = 0; i < N; i++) {
         int cpu1 = ticks[i] * 100 / tticks;
         int cpu2 = ticks[i] * 1000 / tticks % 10;
+        int expected1 = tickets[i] * 100 / total_tickets;
+        int expected2 = tickets[i] * 1000 / total_tickets % 10;
 
-        printf(1, "PID: %d\tTICKETS: %d\tTICKS: %d\tCPU: %d.%d%%\n",
-               children[i], tickets[i], ticks[i], cpu1, cpu2);
+        printf(1, "PID: %d\tTICKETS: %d\tTICKS: %d\tCPU: %d.%d%%\tEXPECTED: %d.%d%%\n",
+               children[i], tickets[i], ticks[i], cpu1, cpu2, expected1, expected2);
     }
     printf(1, "\n");
 }
@@ -88,9 +92,9 @@ void main(int argc, char *argv[]) {
 
     fork_children();
 
-    printf(1, "to share ~500 ticks ");
+    printf(1, "to share ~3000 ticks ");
 
-    sleep(500);
+    sleep(3000);
 
     if (getpinfo(&pstat) == -1) {
         printf(1, "\nFailed to get pinfo\n");
