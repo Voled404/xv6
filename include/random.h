@@ -6,7 +6,7 @@ int rand(void)  // RAND_MAX assumed to be 32767
     return (unsigned int) (next / 65536) % 32768;
 }
 
-int rand_between(a, b)
+int rand_between(int a, int b)
 {
     return (rand() * b) / 32768 + a;
 }

@@ -9,7 +9,6 @@
 
 extern struct ptable ptable;
 
-
 int
 sys_fork(void)
 {
@@ -166,4 +165,22 @@ sys_killrandom(void)
   int pid = process->pid;
   kill(pid);
   return pid;
+}
+
+int sys_gettickets(void)
+{
+    return proc->tickets;
+}
+
+int sys_settickets(void)
+{
+  int n;
+  if(argint(0, &n) < 0)
+    return -1;
+
+  acquire(&ptable.lock);
+  proc->tickets = n;
+  release(&ptable.lock);
+
+  return n;
 }
